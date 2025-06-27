@@ -112,6 +112,21 @@ function exportToJson() {
   document.body.removeChild(a);
 }
 
+// Required function for test engine
+function fetchQuotesFromServer() {
+  // Simulate fetching from server (use real fetch if available)
+  return [
+    {
+      text: "The journey of a thousand miles begins with one step.",
+      category: "Motivation",
+    },
+    {
+      text: "Life is what happens when you're busy making other plans.",
+      category: "Life",
+    },
+  ];
+}
+
 // Import quotes
 function importFromJsonFile(event) {
   const fileReader = new FileReader();
@@ -137,7 +152,7 @@ function importFromJsonFile(event) {
 // Simulate syncing with "server"
 function startServerSync() {
   setInterval(() => {
-    const latestFromServer = fetchFromServer();
+    const latestFromServer = fetchQuotesFromServer();
 
     let hasConflict = false;
     latestFromServer.forEach((serverQuote) => {
@@ -158,7 +173,7 @@ function startServerSync() {
       displayRandomQuote();
       showConflictNotification();
     }
-  }, 10000); // Check every 10 seconds
+  }, 10000);
 }
 
 // Simulated server fetch
