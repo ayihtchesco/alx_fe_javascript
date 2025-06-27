@@ -45,19 +45,23 @@ function displayRandomQuote() {
 
 // Add new quote
 function addQuote() {
-  const text = document.getElementById("newQuoteText").value.trim();
-  const category = document.getElementById("newQuoteCategory").value.trim();
+  const quoteText = document.getElementById("newQuoteText").value.trim();
+  const quoteCategory = document
+    .getElementById("newQuoteCategory")
+    .value.trim();
 
-  if (!text || !category) {
+  if (!quoteText || !quoteCategory) {
     alert("Please enter both quote and category.");
     return;
   }
 
-  const newQuote = { text, category };
+  const newQuote = { text: quoteText, category: quoteCategory };
   quotes.push(newQuote);
   saveQuotes();
   populateCategories();
-  displayRandomQuote();
+
+  // Post to server
+  postQuoteToServer(newQuote);
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
@@ -181,6 +185,23 @@ function startServerSync() {
 // Simulated server fetch
 function fetchFromServer() {
   return serverQuotes;
+}
+
+function postQuoteToServer(quote) {
+  fetch("https://jsonplaceholder.typicode.com/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(quote),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Quote successfully posted to server:", data);
+    })
+    .catch((error) => {
+      console.error("Error posting quote:", error);
+    });
 }
 
 // Conflict resolution notification
