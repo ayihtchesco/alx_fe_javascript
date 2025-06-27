@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   displayRandomQuote();
   syncQuotes(); // Trigger sync when app loads
 });
+document.getElementById("sync-status").textContent =
+  "Quotes synced with server!";
 
 // Load local and server data on startup
 document.addEventListener("DOMContentLoaded", () => {
@@ -252,29 +254,34 @@ function createAddQuoteForm() {
 
   document.body.appendChild(formContainer);
 }
+
 async function syncQuotes() {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
     const serverQuotes = await response.json();
 
-    // Convert server data to quote format if needed
     const convertedQuotes = serverQuotes.slice(0, 5).map((post) => ({
       text: post.title,
       category: "server",
     }));
 
-    // Use server data as authoritative (conflict resolution)
+    // Replace local quotes
     quotes = convertedQuotes;
 
     // Save to localStorage
     localStorage.setItem("quotes", JSON.stringify(quotes));
 
-    // Refresh UI
+    // Update UI
     displayRandomQuote();
     populateCategories();
 
-    console.log("Quotes synced from server.");
+    // ✅ Show user notification
+    document.getElementById("sync-status").textContent =
+      "Quotes synced with server!";
   } catch (error) {
     console.error("Error syncing quotes:", error);
+    document.getElementById("sync-status").textContent =
+      "Failed to sync quotes.";
+    document.getElementById("sync-status").style.color = "red";
   }
 }
