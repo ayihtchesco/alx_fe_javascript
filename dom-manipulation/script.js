@@ -113,18 +113,20 @@ function exportToJson() {
 }
 
 // Required function for test engine
-function fetchQuotesFromServer() {
-  // Simulate fetching from server (use real fetch if available)
-  return [
-    {
-      text: "The journey of a thousand miles begins with one step.",
-      category: "Motivation",
-    },
-    {
-      text: "Life is what happens when you're busy making other plans.",
-      category: "Life",
-    },
-  ];
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const data = await response.json();
+
+    // Convert fetched posts into quote format
+    return data.slice(0, 5).map((post) => ({
+      text: post.title,
+      category: "Server",
+    }));
+  } catch (error) {
+    console.error("Failed to fetch quotes from server:", error);
+    return [];
+  }
 }
 
 // Import quotes
@@ -151,8 +153,8 @@ function importFromJsonFile(event) {
 
 // Simulate syncing with "server"
 function startServerSync() {
-  setInterval(() => {
-    const latestFromServer = fetchQuotesFromServer();
+  setInterval(async () => {
+    const latestFromServer = await fetchQuotesFromServer();
 
     let hasConflict = false;
     latestFromServer.forEach((serverQuote) => {
