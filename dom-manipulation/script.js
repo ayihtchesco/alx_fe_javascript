@@ -23,8 +23,7 @@ const quotes = [
 // Show a random quote
 function showRandomQuote() {
   if (quotes.length === 0) {
-    document.getElementById("quoteDisplay").textContent =
-      "No quotes available.";
+    document.getElementById("quoteDisplay").innerHTML = "No quotes available.";
     return;
   }
 
@@ -32,7 +31,7 @@ function showRandomQuote() {
   const quote = quotes[randomIndex];
   document.getElementById(
     "quoteDisplay"
-  ).textContent = `"${quote.text}" - [${quote.category}]`;
+  ).innerHTML = `"${quote.text}" - <em>[${quote.category}]</em>`;
 }
 
 // Create the quote input form dynamically
